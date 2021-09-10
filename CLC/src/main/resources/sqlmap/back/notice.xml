@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sqlmap.back.notice">
+    <!-- 검색 조건 -->
+    <sql id="sqlWhere">
+  	   <if test="searchTxt != null and searchTxt != ''">
+           AND BN_SUBJECT LIKE '%'||#{searchTxt}||'%'
+       </if>
+       <if test="searchState != null and searchState != ''">
+           AND BN_STATE = #{searchState}
+       </if>
+       <if test="searchType != null and searchType != ''">
+           AND BN_TYPE = #{searchType}
+       </if>
+	</sql>
+	
+	<!-- 페이지 카운팅 -->
+	<select id="getNoticeListCnt" parameterType="map" resultType="int">
+	    SELECT COUNT(*) CNT
+          FROM TB_BOARD_NOTICE
+		 WHERE 1 = 1
+		   <include refid="sqlWhere" />
+	</select>
+	
+	<select id="getNoticeList" parameterType="map" resultType="map">
+	    SELECT *
+          FROM (
+               SELECT A.*
+                    , ROWNUM AS RN
+                 FROM (
+                      SELECT BN_SEQ
+                           , BN_SUBJECT
+                           , BN_TYPE
+                           , BN_STATE
+                           , CASE BN_TYPE WHEN '01' THEN '공지' ELSE '새소식' END BN_TYPEFT
+                           , TO_CHAR(BN_REGDATE, 'YYYY-MM-DD') AS REGDATEFD
+                        FROM TB_BOARD_NOTICE
+                       WHERE 1=1 <include refid="sqlPostsWhere" />
+                       <if test="sortid !=null and sortid !='' and sort !=null and sort !=''">
+                       ORDER BY ${sortid} ${sort}
+                       </if>
+                       <if test="sortid ==null or sortid =='' or sort ==null or sort ==''">
+                       ORDER BY BN_SEQ DESC
+                       </if>
+                      )A
+               )
+         WHERE RN > #{pStartRowNum} AND #{pEndRowNum} >= RN
+	</select>
+	
+	
+	<select id="getNoticeOne" parameterType="map" resultType="map">
+        SELECT *
+          FROM TB_BOARD_NOTICE
+         WHERE BN_SEQ = #{bn_seq}
+	</select>
+	
+	<!-- 공지사항 등록 -->
+	<insert id="insertNotice" parameterType="map">
+        INSERT INTO TB_BOARD_NOTICE (
+            BN_SEQ
+          , BN_SUBJECT
+          , BN_CONTENT
+          , BN_STATE
+          , BN_TYPE
+          , BN_REGUSER
+        ) VALUES (
+            SEQ_BOARDNOTICE.NEXTVAL
+          , #{bn_subject}
+          , #{bn_content}
+          , #{bn_state}
+          , #{bn_type}
+          , #{sMgrUserId}
+        )
+    </insert>
+    
+    <!-- 공지사항 수정 -->
+	<update id="updateNotice" parameterType="map">
+        UPDATE TB_BOARD_NOTICE 
+		   SET BN_SUBJECT = #{bn_subject}
+			 , BN_CONTENT = #{ck_content}
+			 , BN_STATE = #{bn_state}
+			 , BN_TYPE = #{bn_type}
+ 			 , BN_MODDATE = CURRENT_TIMESTAMP
+			 , BN_MODUSER = #{sMgrUserId}
+		 WHERE BN_SEQ = #{bn_seq}
+	</update>
+	
+	<!-- 공지사항 수정 -->
+	<update id="updateNoticeState" parameterType="map">
+        UPDATE TB_BOARD_NOTICE 
+		   SET BN_STATE = #{bn_state}
+		     , BN_MODDATE = CURRENT_TIMESTAMP
+			 , BN_MODUSER = #{sMgrUserId}
+		 WHERE BN_SEQ = #{bn_seq}
+	</update>
+  
+</mapper>
+    
