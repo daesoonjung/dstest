@@ -1,4 +1,4 @@
-FROM tomcat:8.0-alpine
+FROM tomcat:8.5
 
 MAINTAINER mihai blandu
 #COPY ReadMe $CATALINA_HOME/conf/ReadMe.md
