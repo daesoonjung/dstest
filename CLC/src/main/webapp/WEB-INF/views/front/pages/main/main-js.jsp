@@ -5,4 +5,8 @@
   mainSolutionCont();
   mainCardSlider();
   mainSolutionWrapHeight();
+  
+  
+  
+  
 </script>

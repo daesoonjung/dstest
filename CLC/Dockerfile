@@ -1,8 +1,8 @@
-FROM tomcat:8.5
+FROM tomcat:8.5.70-jdk8-openjdk
 
-#MAINTAINER mihai blandu
-COPY target/clc-1.0.0-BUILD-SNAPSHOT.war /usr/local/tomcat/webapps/app.war
-#COPY tomcat-users.xml $CATALINA_HOME/conf/tomcat-users.xml
-#COPY ReadMe $CATALINA_HOME/conf/ReadMe.md
+#MAINTAINER 
+RUN rm -Rf /usr/local/tomcat/webapps/ROOT
+COPY target/clc-1.0.0-BUILD-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
+COPY tomcat_conf/server.xml /usr/local/tomcat/conf/server.xml
 EXPOSE 8080
 CMD ["catalina.sh", "run"]

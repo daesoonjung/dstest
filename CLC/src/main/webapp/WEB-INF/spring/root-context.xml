@@ -18,5 +18,7 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
     <import resource="oracle-config.xml"/>
+    <import resource="redis-config.xml"/>
     <bean id="deployProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean" p:location="/WEB-INF/spring/spring.properties" />
 </beans>
+

@@ -9,6 +9,16 @@
 		<param-value>/WEB-INF/spring/root-context.xml</param-value>
 	</context-param>
 	
+	
+	<filter>
+		 <filter-name>springSessionRepositoryFilter</filter-name>
+		 <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+ 	</filter>
+	<filter-mapping>
+	 	<filter-name>springSessionRepositoryFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -29,5 +39,15 @@
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+	
+	 <!--  WAS에서 제공하는 세션 정보를 redis를 통해서 전달하게 처리하는 Filter 설정 -->
+	<!-- <filter>
+	    <filter-name>springSessionRepositoryFilter</filter-name>
+	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+	    <filter-name>springSessionRepositoryFilter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping> -->
 
 </web-app>
