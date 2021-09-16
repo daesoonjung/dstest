@@ -6,3 +6,4 @@ COPY target/clc-1.0.0-BUILD-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 COPY tomcat_conf/server.xml /usr/local/tomcat/conf/server.xml
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
+1
